@@ -14,6 +14,13 @@ class ShapePacker():
             col = index % self.field_width
             self.field[row, col] = 2
 
+    
+    def rotate_shape(self, shape):
+        return np.rot90(shape)
+
+    def mirror_shape(self, shape):
+        return np.fliplr(shape)
+
     def alt_shapes(self, shapes):
         rotated_shapes = []
         for shape in shapes:
@@ -45,7 +52,7 @@ class ShapePacker():
                             if self.can_place_shape(shape, (i, j)):
                                 packed_shapes.append((shape, (i, j)))
                                 self.place_shape(shape, (i, j))
-                                self.space_shape(shape, (i, j), spacing)
+                                self.space_field(shape, (i, j), spacing)
                         except:                      
                             continue
         return packed_shapes
@@ -56,12 +63,6 @@ class ShapePacker():
                 if shape[i, j] != 0 and self.field[pos[0] + i, pos[1] + j] != 0:
                     return False
         return True
-    
-    def rotate_shape(self, shape):
-        return np.rot90(shape)
-
-    def mirror_shape(self, shape):
-        return np.fliplr(shape)
 
     def place_shape(self, shape, pos):
         for i in range(shape.shape[0]):
@@ -70,7 +71,7 @@ class ShapePacker():
                     # Place the shape element
                     self.field[pos[0] + i, pos[1] + j] = shape[i, j]
 
-    def space_shape(self, shape, pos, distance):
+    def space_field(self, shape, pos, distance):
         for i in range(shape.shape[0]):
             for j in range(shape.shape[1]):
                 # Check for adjacent zeros and update to 3
@@ -81,11 +82,10 @@ class ShapePacker():
                             new_row = pos[0] + i + step * di
                             new_col = pos[1] + j + step * dj
                             # Check if within field bounds and is a zero
-                            if 0 <= new_row < self.field_depth+1 and 0 <= new_col < self.field_width+1 and self.field[new_row, new_col] == 0:
+                            if 0 <= new_row < self.field_depth and 0 <= new_col < self.field_width and self.field[new_row, new_col] == 0:
                                 self.field[new_row, new_col] = 9
                             else:
-                                break
-
+                                continue
 
 if __name__ == "__main__":
     field_depth = 10
