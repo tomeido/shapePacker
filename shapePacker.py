@@ -89,7 +89,7 @@ class ShapePacker():
 
 if __name__ == "__main__":
     field_depth = 10
-    field_width = 10
+    field_width = 15
     voids = 10
     spacing = 5
     # Define the example shape properly
